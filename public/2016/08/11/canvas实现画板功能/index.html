@@ -1,0 +1,398 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>canvas实现画板功能 | ALI Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="LiZijian">
+    
+    <meta name="description" itemprop="description" content="canvas实现画板功能">
+    
+    <meta name="keywords" content="canvas h5 画板">
+    
+    
+    
+    <link rel="icon" href="/img/ali.jpg">
+    
+    
+    <link rel="apple-touch-icon" href="/img/ali.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/ali.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="ALI Blog" title="ALI Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ALI Blog">ALI Blog</a></h1>
+				<h2 class="blog-motto">ALI Blog</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">博客</a></li>
+					
+						<li><a href="/about">撩我吧</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>搜索</label>
+						<input type="text" style="border-radius: 5px" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜我吧" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/11/canvas实现画板功能/" title="canvas实现画板功能" itemprop="url">canvas实现画板功能</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="LiZijian">LiZijian</a>
+    </p>
+  <p class="article-time">
+    发表于:<time datetime="2016-08-10T18:29:37.000Z" itemprop="datePublished">2016-08-11</time>
+    <!--更新日期:<time datetime="2016-08-10T20:00:34.161Z" itemprop="dateModified">2016-08-11</time>-->
+
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#canvas实现画板功能"><span class="toc-number">1.</span> <span class="toc-text">canvas实现画板功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setp1-构建网页基本样式"><span class="toc-number">1.1.</span> <span class="toc-text">Setp1:构建网页基本样式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step2-构造实现画板各个功能的js代码"><span class="toc-number">1.2.</span> <span class="toc-text">Step2:构造实现画板各个功能的js代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step3-加载js文件"><span class="toc-number">1.3.</span> <span class="toc-text">Step3:加载js文件</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="canvas实现画板功能"><a href="#canvas实现画板功能" class="headerlink" title="canvas实现画板功能"></a>canvas实现画板功能</h1><blockquote>
+<p>需求分析<br>1.具有基本的铅笔功能<br>2.即时直线绘制<br>3.即时绘制矩形<br>4.即时圆形<br>5.即时橡皮擦<br>7.插入图片<br>8.把画板保存为图片并下载  //此处还没做好，画板底色是黑色的<br>9.选择颜色<br>10.选择线条粗细</p>
+</blockquote>
+<h2 id="Setp1-构建网页基本样式"><a href="#Setp1-构建网页基本样式" class="headerlink" title="Setp1:构建网页基本样式"></a>Setp1:构建网页基本样式</h2><blockquote>
+<p>html代码<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--可选操作--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"select"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"pen"</span>&gt;</span>铅笔<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"line"</span>&gt;</span>直线<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"rect"</span>&gt;</span>矩形<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"arc"</span>&gt;</span>圆形<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"robber"</span>&gt;</span>橡皮檫<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"img"</span>&gt;</span>图片<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"save"</span>&gt;</span>保存<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">id</span>=<span class="string">"file"</span> <span class="attr">name</span>=<span class="string">"img"</span> <span class="attr">style</span>=<span class="string">"display: none"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"color"</span> <span class="attr">id</span>=<span class="string">"color"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"number"</span> <span class="attr">id</span>=<span class="string">"lineWidth"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--画板--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"penal"</span> <span class="attr">width</span>=<span class="string">"800"</span> <span class="attr">height</span>=<span class="string">"800"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>css代码<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/`只有一句，用来初始化画板颜色`/</span><br><span class="line">#penal &#123;</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 800px;</span><br><span class="line">    background-color: #ccc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="Step2-构造实现画板各个功能的js代码"><a href="#Step2-构造实现画板各个功能的js代码" class="headerlink" title="Step2:构造实现画板各个功能的js代码"></a>Step2:构造实现画板各个功能的js代码</h2><blockquote>
+<p>1.构造<code>Draw()</code>类，并初始化必要的参数<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Draw = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.type = <span class="string">'pen'</span>;  <span class="comment">//选项类型，默认为铅笔</span></span><br><span class="line">    <span class="keyword">this</span>.penal = <span class="built_in">document</span>.getElementById(<span class="string">'penal'</span>);</span><br><span class="line">    <span class="keyword">this</span>.pen = <span class="keyword">this</span>.penal.getContext(<span class="string">'2d'</span>);</span><br><span class="line">    <span class="keyword">this</span>.isDraw = <span class="literal">false</span>;    <span class="comment">//绘画开关</span></span><br><span class="line">    <span class="keyword">this</span>.color = <span class="built_in">document</span>.getElementById(<span class="string">'color'</span>);</span><br><span class="line">    <span class="keyword">this</span>.lineWidth = <span class="built_in">document</span>.getElementById(<span class="string">'lineWidth'</span>);</span><br><span class="line">    <span class="keyword">this</span>.select = <span class="built_in">document</span>.getElementById(<span class="string">'select'</span>);    <span class="comment">//选择面板</span></span><br><span class="line">    <span class="keyword">this</span>.img = <span class="keyword">new</span> Image();<span class="comment">//用于动态绘制直线，矩形，圆形</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>2.这里只需要构造一个初始化函数<code>init()</code></p>
+<blockquote>
+<p>初始化函数内部需要用到的变量<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    Draw.prototype.init = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">var</span> originX = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">var</span> originY = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="string">`</span></span><br></pre></td></tr></table></figure></p>
+<p>先绑定选择操作<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.select.addEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(event.target.id == <span class="string">'pen'</span>)&#123;</span><br><span class="line">        self.type = <span class="string">'pen'</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(event.target.id == <span class="string">'line'</span>)&#123;</span><br><span class="line">        self.type = <span class="string">'line'</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(event.target.id == <span class="string">'rect'</span>)&#123;</span><br><span class="line">        self.type = <span class="string">'rect'</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(event.target.id == <span class="string">'arc'</span>)&#123;</span><br><span class="line">        self.type = <span class="string">'arc'</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(event.target.id == <span class="string">'robber'</span>)&#123;</span><br><span class="line">        self.type = <span class="string">'robber'</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(event.target.id == <span class="string">'img'</span>)&#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'file'</span>).click();    <span class="comment">//默认触发选择文件操作</span></span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'file'</span>).onchange = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">var</span> reader = <span class="keyword">new</span> FileReader();          <span class="comment">//这是H5新增加的读取文件函数</span></span><br><span class="line">            reader.readAsDataURL(e.target.files[<span class="number">0</span>]);</span><br><span class="line">            reader.onload = <span class="function"><span class="keyword">function</span>(<span class="params">ent</span>)</span>&#123;          <span class="comment">//文件读取完毕后触发操作</span></span><br><span class="line">                <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span><br><span class="line">                img.src = ent.target.result;        <span class="comment">//读取的结果默认存放在result上</span></span><br><span class="line">                self.pen.drawImage(img,<span class="number">0</span>,<span class="number">0</span>);        <span class="comment">//把图片直接画在画布上</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(event.target.id == <span class="string">'save'</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> a = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>);</span><br><span class="line">        a.href = self.penal.toDataURL(<span class="string">'image/png'</span>);     <span class="comment">//把画布转化为base64</span></span><br><span class="line">        a.download = <span class="string">'image.jpeg'</span>;</span><br><span class="line">        a.id = <span class="string">'download'</span>;</span><br><span class="line">        a.innerHTML = <span class="string">'download'</span>;</span><br><span class="line">        <span class="built_in">document</span>.body.appendChild(a);</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'download'</span>).style.display = <span class="string">'none'</span>;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'download'</span>).click();    <span class="comment">//默认出发下载操作</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
+<p>可以知道当绘画时，<code>mousedown</code>事件触发时，需要把<code>this.isDraw = true</code>,同时记录鼠标所在坐标，获取选择的<code>color</code>和<code>linewidth</code>,并开启绘画路径<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.penal.addEventListener(<span class="string">'mousedown'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    self.isDraw = <span class="literal">true</span>;</span><br><span class="line">    originX = event.clientX - self.penal.offsetLeft;    <span class="comment">//原点x坐标</span></span><br><span class="line">    originY = event.clientY - self.penal.offsetTop;     <span class="comment">//原点y坐标</span></span><br><span class="line">    self.pen.moveTo(originX, originY);</span><br><span class="line">    self.pen.strokeStyle = self.color.value;</span><br><span class="line">    self.pen.lineWidth = self.lineWidth.value;</span><br><span class="line">    self.pen.beginPath();</span><br><span class="line"></span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
+<p>然后当触发<code>mouseup</code>事件时，可知需要结束绘画，若鼠标离开画布，即<code>mouseleave</code>时，也需要结束绘画，这部分很简单只需把<code>this.isDraw = false</code>和关闭绘画路径<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.penal.addEventListener(<span class="string">'mouseleave'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(self.isDraw)&#123;</span><br><span class="line">        self.pen.closePath();</span><br><span class="line">        self.isDraw = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br><span class="line"><span class="keyword">this</span>.penal.addEventListener(<span class="string">'mouseup'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(self.isDraw)&#123;</span><br><span class="line">        self.pen.closePath();</span><br><span class="line">        self.isDraw = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
+<p>接下来就是最难的部分的，当<code>mouseover</code>时，需要即时绘制</p>
+<blockquote>
+<p>先实现铅笔功能<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.penal.addEventListener(<span class="string">'mousemove'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//只有可绘画时才可画</span></span><br><span class="line">    <span class="keyword">if</span>(self.isDraw)&#123;</span><br><span class="line">        <span class="keyword">var</span> x = event.clientX - self.penal.offsetLeft;  <span class="comment">//移动过程中的x坐标</span></span><br><span class="line">        <span class="keyword">var</span> y = event.clientY - self.penal.offsetTop;   <span class="comment">//移动过程中的y坐标</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(self.type == <span class="string">'pen'</span>)&#123;</span><br><span class="line">            self.pen.lineTo(x,y);</span><br><span class="line">            self.pen.stroke();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
+<p>接下来实现橡皮擦功能，实现方法是把绘画线条加粗，并颜色默认选择画布底色<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(self.type == <span class="string">'robber'</span>)&#123;</span><br><span class="line">     self.pen.strokeStyle = <span class="string">'#ccc'</span>;</span><br><span class="line">     self.pen.clearRect(x<span class="number">-10</span>,y<span class="number">-10</span>,<span class="number">20</span>,<span class="number">20</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来实现绘制直线，矩形和圆形的方法其实大同小异,然后为了能让我们画矩形和圆形能在所有方向都能画，我们增加了<code>newOriginX</code>和<code>newOriginY</code>两个变量<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> newOriginX  = originX,newOriginY = originY;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(self.type == <span class="string">'line'</span>)&#123;</span><br><span class="line">    self.pen.moveTo(originX,originY);</span><br><span class="line">    self.pen.lineTo(x,y);</span><br><span class="line">    self.pen.stroke();</span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(self.type == <span class="string">'rect'</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(x &lt; originX)&#123;</span><br><span class="line">        newOriginX = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(y &lt; originY)&#123;</span><br><span class="line">        newOriginY = y;</span><br><span class="line">    &#125;</span><br><span class="line">    self.pen.rect(newOriginX,newOriginY,<span class="built_in">Math</span>.abs(x-originX),<span class="built_in">Math</span>.abs(y-originY));</span><br><span class="line">    self.pen.stroke();</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(self.type == <span class="string">'arc'</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(x &lt; originX)&#123;</span><br><span class="line">        newOriginX = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(y &lt; originY)&#123;</span><br><span class="line">        newOriginY = y;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> r = <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.abs(x-originX) * <span class="built_in">Math</span>.abs(x-originX) + <span class="built_in">Math</span>.abs(y-originY) * <span class="built_in">Math</span>.abs(y-originY))</span><br><span class="line">    self.pen.arc(<span class="built_in">Math</span>.abs(x-originX)+newOriginX, <span class="built_in">Math</span>.abs(y-originY)+newOriginY , r, <span class="number">0</span>, <span class="number">2</span>*<span class="built_in">Math</span>.PI);</span><br><span class="line">    self.pen.fillStyle = self.color.value;</span><br><span class="line">    self.pen.fill();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>question:</code>此时我们发现画的直线，矩形和圆形都会在画的时候留下移动的痕迹，这不是我们希望的结果，所以解决方法是：<br>在<code>mousedown</code>时，把当前画布内容保存为图片，并用初始化时一直没有使用过的<code>this.img</code>来保存，然后每次画直线等的时候先把画布全部清空，然后在把<code>this.img</code>画到画布上<br>把原来的<code>mousedown</code>事件添加一句代码<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.penal.addEventListener(<span class="string">'mousedown'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    self.isDraw = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//增加一句代码</span></span><br><span class="line">    self.img.src = self.penal.toDataURL(<span class="string">'image/png'</span>);</span><br><span class="line"></span><br><span class="line">    originX = event.clientX - self.penal.offsetLeft;    <span class="comment">//原点x坐标</span></span><br><span class="line">    originY = event.clientY - self.penal.offsetTop;     <span class="comment">//原点y坐标</span></span><br><span class="line">    self.pen.moveTo(originX, originY);</span><br><span class="line">    self.pen.strokeStyle = self.color.value;</span><br><span class="line">    self.pen.lineWidth = self.lineWidth.value;</span><br><span class="line">    self.pen.beginPath();</span><br><span class="line"></span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
+<p>把<code>mouseover</code>事件的代码稍作更改<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(self.type == <span class="string">'line'</span>)&#123;</span><br><span class="line"></span><br><span class="line">    self.pen.clearRect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">800</span>,<span class="number">800</span>);<span class="comment">//增加代码</span></span><br><span class="line">    self.pen.drawImage(self.img, <span class="number">0</span>, <span class="number">0</span>);<span class="comment">//增加代码</span></span><br><span class="line">    self.pen.beginPath();<span class="comment">//增加代码</span></span><br><span class="line"></span><br><span class="line">    self.pen.moveTo(originX,originY);</span><br><span class="line">    self.pen.lineTo(x,y);</span><br><span class="line">    self.pen.stroke();</span><br><span class="line"></span><br><span class="line">    self.pen.closePath();<span class="comment">//增加代码</span></span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(self.type == <span class="string">'rect'</span>)&#123;</span><br><span class="line">    self.pen.clearRect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">800</span>,<span class="number">800</span>);<span class="comment">//增加代码</span></span><br><span class="line">    self.pen.drawImage(self.img, <span class="number">0</span>, <span class="number">0</span>);<span class="comment">//增加代码</span></span><br><span class="line">    self.pen.beginPath();<span class="comment">//增加代码</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(x &lt; originX)&#123;</span><br><span class="line">        newOriginX = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(y &lt; originY)&#123;</span><br><span class="line">        newOriginY = y;</span><br><span class="line">    &#125;</span><br><span class="line">    self.pen.rect(newOriginX,newOriginY,<span class="built_in">Math</span>.abs(x-originX),<span class="built_in">Math</span>.abs(y-originY));</span><br><span class="line">    self.pen.stroke();</span><br><span class="line"></span><br><span class="line">    self.pen.closePath();<span class="comment">//增加代码</span></span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(self.type == <span class="string">'arc'</span>)&#123;</span><br><span class="line">    self.pen.clearRect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">800</span>,<span class="number">800</span>);<span class="comment">//增加代码</span></span><br><span class="line">    self.pen.drawImage(self.img, <span class="number">0</span>, <span class="number">0</span>);<span class="comment">//增加代码</span></span><br><span class="line">    self.pen.beginPath();<span class="comment">//增加代码</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(x &lt; originX)&#123;</span><br><span class="line">        newOriginX = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(y &lt; originY)&#123;</span><br><span class="line">        newOriginY = y;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> r = <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.abs(x-originX) * <span class="built_in">Math</span>.abs(x-originX) + <span class="built_in">Math</span>.abs(y-originY) * <span class="built_in">Math</span>.abs(y-originY))</span><br><span class="line">    self.pen.arc(<span class="built_in">Math</span>.abs(x-originX)+newOriginX, <span class="built_in">Math</span>.abs(y-originY)+newOriginY , r, <span class="number">0</span>, <span class="number">2</span>*<span class="built_in">Math</span>.PI);</span><br><span class="line">    self.pen.fillStyle = self.color.value;</span><br><span class="line">    self.pen.fill();</span><br><span class="line">    self.pen.closePath();<span class="comment">//增加代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="Step3-加载js文件"><a href="#Step3-加载js文件" class="headerlink" title="Step3:加载js文件"></a>Step3:加载js文件</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"draw.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span><br><span class="line">    <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> draw = <span class="keyword">new</span> Draw();</span><br><span class="line">        draw.init();</span><br><span class="line">    &#125;;</span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最后简单的画板功能就是实现了，如有不足之处请指出</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/canvas/">canvas</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Html5/">Html5</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2016/08/11/canvas实现画板功能/" data-title="canvas实现画板功能 | ALI Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/05/23/我的第一篇hexo博客/"  title="我的第一篇hexo博客">
+ <strong>下一篇:</strong><br/>
+ <span>我的第一篇hexo博客
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#canvas实现画板功能"><span class="toc-number">1.</span> <span class="toc-text">canvas实现画板功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setp1-构建网页基本样式"><span class="toc-number">1.1.</span> <span class="toc-text">Setp1:构建网页基本样式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step2-构造实现画板各个功能的js代码"><span class="toc-number">1.2.</span> <span class="toc-text">Step2:构造实现画板各个功能的js代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step3-加载js文件"><span class="toc-number">1.3.</span> <span class="toc-text">Step3:加载js文件</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Html5/" title="Html5">Html5<sup>1</sup></a></li>
+		
+			<li><a href="/categories/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/canvas/" title="canvas">canvas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+		<!--<img class="author" src="../img/ali.jpg">-->
+	</div>
+	
+	
+	<section class="info">
+		<p> 程序猿不问出处 <br/>
+			师承quanta动物园</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2647100742" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/1364137942" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:1364137942@qq.com" target="_blank" title="mail"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://yoursite.com" target="_blank" title="LiZijian">LiZijian</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

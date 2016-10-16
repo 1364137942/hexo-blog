@@ -1,0 +1,399 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>我的第一篇hexo博客 | ALI Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="LiZijian">
+    
+    <meta name="description" itemprop="description" content="hexo博客搭建">
+    
+    <meta name="keywords" content="hexo博客搭建">
+    
+    
+    
+    <link rel="icon" href="/img/ali.jpg">
+    
+    
+    <link rel="apple-touch-icon" href="/img/ali.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/ali.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="ALI Blog" title="ALI Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ALI Blog">ALI Blog</a></h1>
+				<h2 class="blog-motto">ALI Blog</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">博客</a></li>
+					
+						<li><a href="/about">撩我吧</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>搜索</label>
+						<input type="text" style="border-radius: 5px" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜我吧" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/23/我的第一篇hexo博客/" title="我的第一篇hexo博客" itemprop="url">我的第一篇hexo博客</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="LiZijian">LiZijian</a>
+    </p>
+  <p class="article-time">
+    发表于:<time datetime="2016-05-23T11:41:00.000Z" itemprop="datePublished">2016-05-23</time>
+    <!--更新日期:<time datetime="2016-05-23T13:21:49.487Z" itemprop="dateModified">2016-05-23</time>-->
+
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo博客搭建"><span class="toc-number">1.</span> <span class="toc-text">hexo博客搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git迁移"><span class="toc-number">2.</span> <span class="toc-text">git迁移</span></a></li></ol>
+		</div>
+		
+		<h2 id="hexo博客搭建"><a href="#hexo博客搭建" class="headerlink" title="hexo博客搭建"></a>hexo博客搭建</h2><blockquote>
+<p>1.首先配置环境，需要用到<code>git</code>，<code>nodejs</code>，这里google上都有教程<br>2.安装hexo<br>    执行 <em>npm install hexo-cli -g</em><br>    可能报错如下：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! Please try running this command again root/Administratot</span><br></pre></td></tr></table></figure>
+<p>需要root权限<br>执行<br>    ● <em>sudo npm install hexo-cli -g</em><br>    ● <em>hexo init blog</em><br>    ● <em>cd blog</em><br>    ● <em>npm install</em><br>    ● <em>hexo server</em><br>然后访问<code>http://localhost:4000</code>即可访问本地博客，哎呦还不错哦</p>
+<h2 id="git迁移"><a href="#git迁移" class="headerlink" title="git迁移"></a>git迁移</h2><p>现在我们的博客都只是可以在本地访问，但做好了博客肯定要放出去装下逼啊</p>
+<blockquote>
+<p>1.创建git仓库什么的就不说了，先来看看配置,打开根目录下的_config.yml</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: git@github.com:<span class="number">1364137942</span>/<span class="number">1364137942.</span>github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>2.然后执行</p>
+</blockquote>
+<p>   ● <em>hexo clean</em><br>   ● <em>hexo generate</em><br>   ● <em>hexo deploy</em><br>然后问题又来了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR Deployer not found: git</span><br></pre></td></tr></table></figure></p>
+<p>google了很久，终于找到了解决方法<br>执行下面一条代码后再执行<br>   ● <em>npm install hexo-deployer-git –save</em></p>
+<blockquote>
+<p>3.大功告成，基本的博客总算做好了，然后还改了一下主题，把code的样式改了一下，然后写这篇博文的时候发现了 <strong>代码不能高亮</strong> 了,心累啊</p>
+</blockquote>
+<p>找了一下原因，把我之前改的关于<code>code</code>的<code>css</code>还原了，还是不行，于是又找了强大的google<br>解决方法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi /themes/pacman/source/css/_base/variable.styl</span><br><span class="line"></span><br><span class="line">// 注释最后一行</span><br><span class="line">// highlight = hexo-config(&quot;highlight.enable&quot;)</span><br><span class="line"></span><br><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure></p>
+<p>神奇的代码高亮回来了</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/hexo/">hexo</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/博客/">博客</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2016/05/23/我的第一篇hexo博客/" data-title="我的第一篇hexo博客 | ALI Blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/11/canvas实现画板功能/" title="canvas实现画板功能">
+  <strong>上一篇:</strong><br/>
+  <span>
+  canvas实现画板功能</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/05/22/hello-world/"  title="Hello World">
+ <strong>下一篇:</strong><br/>
+ <span>Hello World
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo博客搭建"><span class="toc-number">1.</span> <span class="toc-text">hexo博客搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git迁移"><span class="toc-number">2.</span> <span class="toc-text">git迁移</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Html5/" title="Html5">Html5<sup>1</sup></a></li>
+		
+			<li><a href="/categories/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/canvas/" title="canvas">canvas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+		<!--<img class="author" src="../img/ali.jpg">-->
+	</div>
+	
+	
+	<section class="info">
+		<p> 程序猿不问出处 <br/>
+			师承quanta动物园</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2647100742" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/1364137942" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:1364137942@qq.com" target="_blank" title="mail"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://yoursite.com" target="_blank" title="LiZijian">LiZijian</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>
